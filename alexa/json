@@ -1,0 +1,36 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "parola del giorno",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "MainIntent",
+                    "slots": [],
+                    "samples": [
+                        "parola di oggi",
+                        "parola giornaliera",
+                        "parola del giorno",
+                        "parola"
+                    ]
+                }
+            ],
+            "types": []
+        }
+    }
+}
