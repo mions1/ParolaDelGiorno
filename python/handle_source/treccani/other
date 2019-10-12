@@ -1,0 +1,91 @@
+    def get_sinonimi_contrari(self):
+        """ Funzione euristica, recupera i sinonimi del vocabolo.
+        IN LAVORAZIONE
+        
+        Parameters:
+            main_source (str): sorgente della pagina (in generale meglio se solo la sezione principale e se bonificata)
+            src (str): sito della sorgente (default: "treccani") (altri: "zanichelli")
+            
+        Return:
+            definizione del vocabolo del giorno
+        """
+        special_char = ["|",";",".","(",")","[","#"]    # possono essere utili per trovare quando finisce il significato
+        sins = cons = ""
+        
+        #In treccani inizia al primo carattere in maiuscolo dopo il trattino "–" e finisce al primo carattere speciale
+        #-------SINONIMI
+        start = "≈"
+        #start2 = "↔"
+        if start in self.opt_main_source:
+            self.opt_main_source = self.opt_main_source[self.opt_main_source.index(start)+len(start):]
+        #if start2 in main_source:
+            #main_source = main_source[main_source.index(start2)+len(start2):]
+        
+        for c in self.opt_main_source:
+            if c in special_char:
+                break
+            sins += c
+        
+        #--------CONTRARI
+        start = "↔"
+        
+        if start in self.opt_main_source:
+            self.opt_main_source = self.opt_main_source[self.opt_main_source.index(start)+len(start):]
+            if ")" in self.opt_main_source:
+                self.opt_main_source = self.opt_main_source[self.opt_main_source.index(")")+1:]
+        
+        for c in self.opt_main_source:
+            if c in special_char:
+                break
+            cons += c
+            
+        return sins, cons
+    
+    def get_other_sinonimi_contrari(self):
+        """ Funzione euristica, recupera i sinonimi del vocabolo.
+        IN LAVORAZIONE
+        
+        Parameters:
+            main_source (str): sorgente della pagina (in generale meglio se solo la sezione principale e se bonificata)
+            src (str): sito della sorgente (default: "treccani") (altri: "zanichelli")
+            
+        Return:
+            definizione del vocabolo del giorno
+        """
+        special_char = ["|",";",".","(","[","#"]    # possono essere utili per trovare quando finisce il significato
+        sins = cons = ""
+        
+        #In treccani inizia al primo carattere in maiuscolo dopo il trattino "–" e finisce al primo carattere speciale
+        if src == "treccani":
+            #-------SINONIMI
+            start = "2. "
+            if start in self.opt_main_source:
+                self.opt_main_source = self.opt_main_source[self.opt_main_source.index(start)+len(start):]
+                
+            start = "≈"
+            start2 = "↔"
+            if start in self.opt_main_source:
+                self.opt_main_source = self.opt_main_source[self.opt_main_source.index(start)+len(start):]
+            if start2 in self.opt_main_source:
+                self.opt_main_source = self.opt_main_source[self.opt_main_source.index(start2)+len(start2):]
+            
+            for c in self.opt_main_source:
+                if c in special_char:
+                    break
+                sins += c
+            
+            #--------CONTRARI
+            start = "2. "
+            if start in self.opt_main_source:
+                self.opt_main_source = self.opt_main_source[self.opt_main_source.index(start)+len(start):]
+                
+            start = "↔"
+            if start in self.opt_main_source:
+                self.opt_main_source = self.opt_main_source[self.opt_main_source.index(start)+len(start):]
+            
+            for c in self.opt_main_source:
+                if c in special_char:
+                    break
+                cons += c
+        
+        return sins, cons

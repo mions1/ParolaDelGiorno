@@ -21,20 +21,21 @@ class MainIntentHandler():
     
     def main(self):
         #-----------ZANICHELLI for word
-        url = "https://dizionaripiu.zanichelli.it/cultura-e-attualita/le-parole-del-giorno/parola-del-giorno/"
-        source = self.get_source(url)
-        main_source = self.get_main_source(source)
-        opt_main_source = self.delete_more_digit(self.replace_accent(self.delete_tag(main_source)))
+        url_zan = "https://dizionaripiu.zanichelli.it/cultura-e-attualita/le-parole-del-giorno/parola-del-giorno/"
+        source_zan = self.get_source(url_zan)
+        main_source_zan = self.get_main_source(source_zan)
+        opt_main_source_zan = self.delete_more_digit(self.replace_accent(self.delete_tag(main_source_zan)))
         
-        word = self.get_word(opt_main_source)
+        word = self.get_word(opt_main_source_zan)
         #------------TRECCANI for meaning
-        url = "http://www.treccani.it/vocabolario/"+word+"/"
-        source = self.get_source(url)
-        main_source = self.get_main_source(source, "treccani")
+        url_tre = "http://www.treccani.it/vocabolario/"+word+"/"
+        source_tre = self.get_source(url_tre)
+        main_source_tre = self.get_main_source(source_tre, "treccani")
+        opt_main_source_tre = self.delete_tag(main_source_tre)
         
-        mean = self.get_meaning(self.delete_tag(main_source), word, "treccani")
-        
-        return word, mean
+        mean = self.get_meaning(opt_main_source_tre, word, "treccani")
+        mean2 = self.get_other_meaning(opt_main_source_tre, word, "treccani")
+        return word, mean, mean2
     
     def delete_tag(self, txt):
         """ Elimina i tag html
@@ -178,7 +179,7 @@ class MainIntentHandler():
             src (str): sito della sorgente (default: "treccani") (altri: "zanichelli")
             
         Return:
-            vocabolo del giorno
+            definizione del vocabolo del giorno
         """
         special_char = ["|",";","(","[","#"]    # possono essere utili per trovare quando finisce il significato
         mean = ""
@@ -210,8 +211,46 @@ class MainIntentHandler():
         
         return mean
     
+    def get_other_meaning(self, main_source, word, src="treccani"):
+        """ Funzione euristica, recupera il secondo significato (se c'è)
+        
+        Parameters:
+            main_source (str): sorgente della pagina (in generale meglio se solo la sezione principale e se bonificata)
+            src (str): sito della sorgente (default: "treccani") (altri: "zanichelli")
+            
+        Return:
+            altro significato del vocabolo del giorno
+        """
+        special_char = ["|",";","(","[","#"]    # possono essere utili per trovare quando finisce il significato
+        mean = ""
+        
+        #In zanichelli inizia spesso dopo '2 ' (ma non sempre, per questo sono passato a treccani) e finisce al primo carattere speciale
+        if src == "zanichelli":
+            main_start = '2 '
+            tmp = main_source[main_source.index(main_start)+len(main_start):]
+            for c in tmp:
+                if c in  special_char:
+                    break
+                mean += c
+        
+        #In treccani inizia dopo 2.
+        elif src == "treccani":
+            start = "2. "
+            
+            if start in main_source:
+                main_source = main_source[main_source.index(start)+len(start):]
+            
+            for c in main_source:
+                if c in special_char:
+                    break
+                mean += c
+            mean = mean.replace(word[0]+".", word)
+            
+        return mean
+    
 if __name__ == "__main__":
     m = MainIntentHandler()
-    word, mean = m.main()
-    print(word)
-    print(mean)
+    word, mean, mean2 = m.main()
+    print("Parola: "+word)
+    print("Significato 1: "+mean)
+    print("Significato 2: "+mean2)
