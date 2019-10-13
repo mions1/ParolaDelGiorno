@@ -3,6 +3,8 @@ from handle_source import source_handler as sh
 class Treccani(sh.SourceHandler):
     
     def __init__(self, url, word):
+        self.mean = ""
+        self.mean2 = ""
         super().__init__(url)
         self.word = word
     
@@ -39,6 +41,7 @@ class Treccani(sh.SourceHandler):
         trattino = upper = False
         special_char = ["|",";","(","[","#"]    # possono essere utili per trovare quando finisce il significato
         mean = ""
+        
         for c in self.opt_main_source:
             if trattino:
                 if upper:
@@ -48,7 +51,7 @@ class Treccani(sh.SourceHandler):
                 elif c.isupper():
                     upper = True
                     mean += c
-            elif "–" in c:
+            elif c in ["–","-"]:
                 trattino = True
         mean = mean.replace(self.word[0]+".", self.word)
         mean = mean.replace(self.word[0:2]+".", self.word)
