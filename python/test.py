@@ -58,7 +58,7 @@ def test(file_from="test/lista_bon.txt", file_to="test/parole.txt", log_file="te
         words = create_file_words(parole, file_to, True)
     else:
         words = get_words_from_file(file_to)
-    words = ["eco"]
+    
     with open(log_file,"w+") as f:
         pass
     for word in words:
