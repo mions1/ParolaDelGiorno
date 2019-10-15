@@ -13,7 +13,7 @@ def header():
     """
     return "---------------PAROLA DEL GIORNO----------------"
 
-def prints(zan, tre, vir):
+def prints(zan, tre, vir, vir_mean):
     """ Stampa dei contenuti
     
     Parameters:
@@ -31,14 +31,15 @@ def prints(zan, tre, vir):
         s = "Oggi la parola non è disponibile"
         return s
     
-    mean = tre.mean
-    mean2 = tre.mean2
+    #mean = tre.mean
+    mean = vir_mean.mean
+    #mean2 = tre.mean2
     sins = vir.sins
     cons = vir.cons
     
     s += "La parola di oggi è: "+word
     s += "\nDefinizione: "+mean if tre.exists else "\nDefinizione non disponibile"
-    s += "\nAltra definizione: "+mean2 if tre.exists and mean2 != "" else ""
+    #s += "\nAltra definizione: "+mean2 if tre.exists and mean2 != "" else ""
     s += "\nSinonimi: "+sins if sins != "" else "\nNessun sinonimo trovato"
     s += "\nContrari: "+cons if cons != "" else "\nNessun contrario trovato"
     
@@ -57,6 +58,10 @@ if __name__ == "__main__":
     #-------------------VIRGILIO PER SINONIMI E CONTRARI
     vir = virgi.Virgilio("https://sapere.virgilio.it/parole/sinonimi-e-contrari/"+zan.word, zan.word)
     vir.init()
+    
+    #-------------------VIRGILIO PER SIGNIFICATO
+    vir_mean = virgi.Virgilio("https://sapere.virgilio.it/parole/vocabolario/"+zan.word, zan.word)
+    vir_mean.init()
 
     print(header())
-    print(prints(zan, tre, vir))
+    print(prints(zan, tre, vir, vir_mean))

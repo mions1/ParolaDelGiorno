@@ -8,6 +8,7 @@ class Virgilio(sh.SourceHandler):
         self.opt_main_source = ""
         self.sins = ""
         self.cons = ""
+        self.mean = ""
         self.exists = False
         super().__init__(url)
     
@@ -18,6 +19,7 @@ class Virgilio(sh.SourceHandler):
         if not self.exists:
             return False
         self.set_sinonimi_contrari()
+        self.set_meaning()
         
         return True
     
@@ -64,6 +66,16 @@ class Virgilio(sh.SourceHandler):
         self.sins = sins
         self.cons = cons
         return sins, cons
+    
+    def set_meaning(self):
+        start = "<li>"
+        end = "</li>"
+        if start not in self.main_source:
+            self.mean = ""
+        else:
+            self.mean = "".join([c for c in self.main_source[self.main_source.index(start)+len(start):self.main_source.index(end)] ])
+            
+        return self.mean
     
     """ Controllo se la parola esiste nel dizionario """
     def check_if_exists(self):
